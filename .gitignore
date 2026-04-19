@@ -1,4 +1,5 @@
 node_modules
+.envnode_modules
 .env
 dist
 buildnode_modules
