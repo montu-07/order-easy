@@ -12,8 +12,8 @@ module.exports = {
           name: 'auth',
           filename: 'remoteEntry.js',
           exposes: {
-            './Login': './src/pages/Login',
-            './Signup': './src/pages/Signup',
+            './Login': './src/bootstrap/LoginApp',
+            './Signup': './src/bootstrap/SignupApp',
           },
           shared: {
             react: {
@@ -28,7 +28,7 @@ module.exports = {
             },
             'react-router-dom': {
               singleton: true,
-              requiredVersion: '^5.3.4',
+              requiredVersion: '^7.14.1',
               eager: true,
             },
             '@reduxjs/toolkit': {
@@ -49,6 +49,14 @@ module.exports = {
       newWebpackConfig.output.publicPath = 'auto';
 
       return newWebpackConfig;
+    },
+  },
+  style: {
+    postcss: {
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ],
     },
   },
 };

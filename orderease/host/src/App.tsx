@@ -21,7 +21,7 @@ function App() {
               path="login"
               element={
                 <ErrorBoundary>
-                  <Suspense fallback={<div>Loading Login...</div>}>
+                  <Suspense fallback={<div className="flex justify-center items-center h-32 text-gray-600">Loading Login...</div>}>
                     <RemoteLogin />
                   </Suspense>
                 </ErrorBoundary>
@@ -31,7 +31,7 @@ function App() {
               path="signup"
               element={
                 <ErrorBoundary>
-                  <Suspense fallback={<div>Loading Signup...</div>}>
+                  <Suspense fallback={<div className="flex justify-center items-center h-32 text-gray-600">Loading Signup...</div>}>
                     <RemoteSignup />
                   </Suspense>
                 </ErrorBoundary>

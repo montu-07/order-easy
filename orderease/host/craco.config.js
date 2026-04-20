@@ -12,7 +12,7 @@ module.exports = {
           name: 'host',
           filename: 'remoteEntry.js',
           remotes: {
-            auth: 'auth@http://localhost:3001/remoteEntry.js',
+            auth: "auth@http://localhost:3002/remoteEntry.js",
           },
           shared: {
             react: {
@@ -27,7 +27,7 @@ module.exports = {
             },
             'react-router-dom': {
               singleton: true,
-              requiredVersion: '^5.3.4',
+              requiredVersion: '^7.14.1',
               eager: true,
             },
           },
@@ -38,6 +38,14 @@ module.exports = {
       newWebpackConfig.output.publicPath = 'auto';
 
       return newWebpackConfig;
+    },
+  },
+  style: {
+    postcss: {
+      plugins: [
+        require('tailwindcss'),
+        require('autoprefixer'),
+      ],
     },
   },
 };
