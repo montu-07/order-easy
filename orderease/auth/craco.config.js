@@ -15,32 +15,15 @@ module.exports = {
             './Login': './src/bootstrap/LoginApp',
             './Signup': './src/bootstrap/SignupApp',
           },
+          remotes: {
+            host: "host@http://localhost:3000/remoteEntry.js",
+          },
           shared: {
-            react: {
-              singleton: true,
-              requiredVersion: '^18.2.0',
-              eager: true,
-            },
-            'react-dom': {
-              singleton: true,
-              requiredVersion: '^18.2.0',
-              eager: true,
-            },
-            'react-router-dom': {
-              singleton: true,
-              requiredVersion: '^7.14.1',
-              eager: true,
-            },
-            '@reduxjs/toolkit': {
-              singleton: true,
-              requiredVersion: '^1.9.1',
-              eager: true,
-            },
-            'react-redux': {
-              singleton: true,
-              requiredVersion: '^8.0.5',
-              eager: true,
-            },
+            react: { singleton: true, requiredVersion: false },
+            "react-dom": { singleton: true, requiredVersion: false },
+            "react-router-dom": { singleton: true, requiredVersion: false },
+            "react-redux": { singleton: true, requiredVersion: false },
+            "@reduxjs/toolkit": { singleton: true, requiredVersion: false },
           },
         })
       );

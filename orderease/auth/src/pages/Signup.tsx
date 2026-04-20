@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { signupUser, clearError, clearSuccess } from '../redux/authSlice'
-import { AppDispatch } from '../redux/store'
+import { signupUser, clearError, clearSuccess } from 'host/authSlice'
+import { useAppDispatch, useAppSelector } from 'host/hooks'
 
 const Signup = () => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { isLoading, error, success, user } = useSelector((state: any) => state.auth)
+  const { isLoading, error, success, user } = useAppSelector((state: any) => state.auth)
 
   const [formData, setFormData] = useState({
     name: '',

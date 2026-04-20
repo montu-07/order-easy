@@ -1,13 +1,14 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAppSelector } from '../redux/hooks';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  // Check if token exists in localStorage
-  const token = localStorage.getItem('token');
+  // Check auth state from Redux store
+  const { token } = useAppSelector((state) => state.auth);
 
   if (!token) {
     // Redirect to login if no token

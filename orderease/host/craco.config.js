@@ -14,22 +14,17 @@ module.exports = {
           remotes: {
             auth: "auth@http://localhost:3002/remoteEntry.js",
           },
+          exposes: {
+            "./authSlice": "./src/redux/authSlice",
+            "./hooks": "./src/redux/hooks",
+            "./store": "./src/redux/store",
+          },
           shared: {
-            react: {
-              singleton: true,
-              requiredVersion: '^18.2.0',
-              eager: true,
-            },
-            'react-dom': {
-              singleton: true,
-              requiredVersion: '^18.2.0',
-              eager: true,
-            },
-            'react-router-dom': {
-              singleton: true,
-              requiredVersion: '^7.14.1',
-              eager: true,
-            },
+            react: { singleton: true, requiredVersion: false },
+            "react-dom": { singleton: true, requiredVersion: false },
+            "react-router-dom": { singleton: true, requiredVersion: false },
+            "react-redux": { singleton: true, requiredVersion: false },
+            "@reduxjs/toolkit": { singleton: true, requiredVersion: false },
           },
         })
       );

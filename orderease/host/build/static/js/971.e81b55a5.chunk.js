@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkorderease_host=globalThis.webpackChunkorderease_host||[]).push([[971],{971(e,s,a){a.r(s),a.d(s,{useAppDispatch:()=>o,useAppSelector:()=>p});var h=a(955);const o=h.useDispatch,p=h.useSelector}}]);
+//# sourceMappingURL=971.e81b55a5.chunk.js.map
