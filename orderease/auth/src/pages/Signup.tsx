@@ -1,56 +1,67 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { signupUser, clearError, clearSuccess } from 'host/authSlice'
-import { useAppDispatch, useAppSelector } from 'host/hooks'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signupUser, clearError, clearSuccess } from 'host/authSlice';
+import { useAppDispatch, useAppSelector } from 'host/hooks';
 
 const Signup = () => {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const { isLoading, error, success, user } = useAppSelector((state: any) => state.auth)
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { isLoading, error, success, user } = useAppSelector((state: any) => state.auth);
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     role: 'USER',
-  })
+  });
 
-  // Clear messages when component unmounts
   useEffect(() => {
     return () => {
-      dispatch(clearError())
-      dispatch(clearSuccess())
-    }
-  }, [dispatch])
+      dispatch(clearError());
+      dispatch(clearSuccess());
+    };
+  }, [dispatch]);
 
-  // Redirect on successful signup
   useEffect(() => {
     if (user && success) {
+      // Redirect to dashboard after successful signup
       const timer = setTimeout(() => {
-        // In micro frontend, we don't handle navigation here
-        // The host app will handle navigation
-      }, 2000)
-      return () => clearTimeout(timer)
+        navigate('/dashboard');
+      }, 2000);
+      return () => clearTimeout(timer);
     }
-  }, [user, success, navigate])
+  }, [user, success, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
-    
-    // Clear error when user starts typing
+      [name]: value,
+    }));
+
     if (error) {
-      dispatch(clearError())
+      dispatch(clearError());
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    dispatch(signupUser(formData))
-  }
+    e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) {
+      return;
+    }
+
+    dispatch(
+      signupUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+      })
+    );
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -170,7 +181,7 @@ const Signup = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;

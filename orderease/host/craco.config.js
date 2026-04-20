@@ -12,7 +12,7 @@ module.exports = {
           name: 'host',
           filename: 'remoteEntry.js',
           remotes: {
-            auth: "auth@http://localhost:3002/remoteEntry.js",
+            auth: "auth@http://localhost:3004/remoteEntry.js",
           },
           exposes: {
             "./authSlice": "./src/redux/authSlice",
@@ -33,14 +33,6 @@ module.exports = {
       newWebpackConfig.output.publicPath = 'auto';
 
       return newWebpackConfig;
-    },
-  },
-  style: {
-    postcss: {
-      plugins: [
-        require('tailwindcss'),
-        require('autoprefixer'),
-      ],
     },
   },
 };

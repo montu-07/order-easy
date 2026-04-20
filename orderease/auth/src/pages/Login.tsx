@@ -1,63 +1,64 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { loginUser, clearError, clearSuccess } from 'host/authSlice'
-import { useAppDispatch, useAppSelector } from 'host/hooks'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { loginUser, clearError, clearSuccess } from 'host/authSlice';
+import { useAppDispatch, useAppSelector } from 'host/hooks';
 
 const Login = () => {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const { isLoading, error, success, user } = useAppSelector((state: any) => state.auth)
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { isLoading, error, success, user } = useAppSelector((state: any) => state.auth);
 
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-  })
+    remember: false,
+  });
 
-  // Clear messages when component unmounts
   useEffect(() => {
     return () => {
-      dispatch(clearError())
-      dispatch(clearSuccess())
-    }
-  }, [dispatch])
+      dispatch(clearError());
+      dispatch(clearSuccess());
+    };
+  }, [dispatch]);
 
-  // Redirect on successful login
   useEffect(() => {
     if (user && success) {
+      // Redirect to dashboard after successful login
       const timer = setTimeout(() => {
-        // In micro frontend, we don't handle navigation here
-        // The host app will handle navigation
-      }, 1500)
-      return () => clearTimeout(timer)
+        navigate('/dashboard');
+      }, 1500);
+      return () => clearTimeout(timer);
     }
-  }, [user, success, navigate])
+  }, [user, success, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
-    
-    // Clear error when user starts typing
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+
     if (error) {
-      dispatch(clearError())
+      dispatch(clearError());
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    dispatch(loginUser(formData))
-  }
+    e.preventDefault();
+    dispatch(loginUser({ email: formData.email, password: formData.password }));
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-900">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-600">
             Or{' '}
             <button
               onClick={() => navigate('/signup')}
@@ -134,7 +135,7 @@ const Login = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
