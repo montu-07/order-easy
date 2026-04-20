@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../redux/hooks';
 
 interface ProtectedRouteProps {
@@ -7,12 +7,12 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  // Check auth state from Redux store
-  const { token } = useAppSelector((state) => state.auth);
+  const { token } = useAppSelector((state: any) => state.auth);
+  const location = useLocation();
 
-  if (!token) {
-    // Redirect to login if no token
-    return <Navigate to="/login" replace />;
+  // Only redirect to login if not authenticated and not already on login/signup pages
+  if (!token && location.pathname !== '/login' && location.pathname !== '/signup') {
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   return <>{children}</>;

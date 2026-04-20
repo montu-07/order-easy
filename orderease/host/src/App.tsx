@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import ErrorBoundary from './components/ErrorBoundary';
+import AuthWatcher from './components/AuthWatcher';
 
 const RemoteLogin = React.lazy(() => import('auth/Login'));
 const RemoteSignup = React.lazy(() => import('auth/Signup'));
@@ -12,29 +13,33 @@ const RemoteSignup = React.lazy(() => import('auth/Signup'));
 function App() {
   return (
     <div className="App">
+      <AuthWatcher />
+
       <Routes>
+        <Route
+          path="/login"
+          element={
+            <ErrorBoundary>
+              <Suspense fallback={<div className="flex justify-center items-center h-screen text-gray-600">Loading Login...</div>}>
+                <RemoteLogin />
+              </Suspense>
+            </ErrorBoundary>
+          }
+        />
+
+        <Route
+          path="/signup"
+          element={
+            <ErrorBoundary>
+              <Suspense fallback={<div className="flex justify-center items-center h-screen text-gray-600">Loading Signup...</div>}>
+                <RemoteSignup />
+              </Suspense>
+            </ErrorBoundary>
+          }
+        />
+
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
-          <Route
-            path="login"
-            element={
-              <ErrorBoundary>
-                <Suspense fallback={<div className="flex justify-center items-center h-32 text-gray-600">Loading Login...</div>}>
-                  <RemoteLogin />
-                </Suspense>
-              </ErrorBoundary>
-            }
-          />
-          <Route
-            path="signup"
-            element={
-              <ErrorBoundary>
-                <Suspense fallback={<div className="flex justify-center items-center h-32 text-gray-600">Loading Signup...</div>}>
-                  <RemoteSignup />
-                </Suspense>
-              </ErrorBoundary>
-            }
-          />
           <Route
             path="dashboard"
             element={

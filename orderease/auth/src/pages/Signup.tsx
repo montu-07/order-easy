@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { signupUser, clearError, clearSuccess } from 'host/authSlice';
 import { useAppDispatch, useAppSelector } from 'host/hooks';
 
-const Signup = () => {
+const Signup: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isLoading, error, success, user } = useAppSelector((state: any) => state.auth);
+  const { isLoading, error, success } = useAppSelector((state: any) => state.auth);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [localError, setLocalError] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -23,16 +28,6 @@ const Signup = () => {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-    if (user && success) {
-      // Redirect to dashboard after successful signup
-      const timer = setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [user, success, navigate]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
@@ -41,15 +36,15 @@ const Signup = () => {
       [name]: value,
     }));
 
-    if (error) {
-      dispatch(clearError());
-    }
+    if (error) dispatch(clearError());
+    if (localError) setLocalError('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
+      setLocalError('Passwords do not match');
       return;
     }
 
@@ -64,121 +59,185 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <button
-              onClick={() => navigate('/login')}
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              sign in to your existing account
-            </button>
-          </p>
-        </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-800">{error}</div>
-            </div>
-          )}
-          
-          {success && (
-            <div className="rounded-md bg-green-50 p-4">
-              <div className="text-sm text-green-800">{success}</div>
-              <div className="text-sm text-green-600 mt-1">
-                Account created! Redirecting...
-              </div>
-            </div>
-          )}
+    <div className="min-h-[calc(100vh-80px)] bg-white px-4 py-10">
+      <div className="mx-auto flex max-w-6xl overflow-hidden rounded-[32px] border border-black/10 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+        <div className="hidden w-1/2 flex-col justify-between bg-black p-12 text-white lg:flex">
+          <div>
+            <p className="text-sm uppercase tracking-[0.3em] text-white/60">OrderEase</p>
+            <h1 className="mt-6 text-5xl font-semibold leading-tight">
+              Create your account.
+            </h1>
+            <p className="mt-5 max-w-md text-base leading-7 text-white/70">
+              Join OrderEase and get a clean, fast, and focused experience for managing your activity.
+            </p>
+          </div>
 
           <div className="space-y-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter your full name"
-                disabled={isLoading}
-              />
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+              <p className="text-sm text-white/60">Simple onboarding</p>
+              <p className="mt-2 text-2xl font-medium">Start in a few seconds</p>
+            </div>
+            <div className="flex gap-3">
+              <div className="h-2 w-2 rounded-full bg-white" />
+              <div className="h-2 w-2 rounded-full bg-white/40" />
+              <div className="h-2 w-2 rounded-full bg-white/20" />
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full bg-white p-6 sm:p-10 lg:w-1/2 lg:p-14">
+          <div className="mx-auto max-w-md">
+            <div className="mb-10">
+              <p className="text-sm font-medium uppercase tracking-[0.25em] text-black/40">
+                Sign up
+              </p>
+              <h2 className="mt-3 text-4xl font-semibold tracking-tight text-black">
+                Create your account
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-black/55">
+                Fill in your details to get started.
+              </p>
             </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter your email"
-                disabled={isLoading}
-              />
-            </div>
+            {(error || localError) && (
+              <div className="mb-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                {localError || error}
+              </div>
+            )}
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter your password"
-                disabled={isLoading}
-              />
-            </div>
+            {success && (
+              <div className="mb-5 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-600">
+                {success}
+              </div>
+            )}
 
-            <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                Role
-              </label>
-              <select
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-black/70">
+                  Full name
+                </label>
+                <div className="flex items-center rounded-2xl border border-black/10 bg-white px-4 py-3 transition focus-within:border-black">
+                  <User className="mr-3 h-5 w-5 text-black/35" />
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    disabled={isLoading}
+                    required
+                    className="w-full bg-transparent text-[15px] text-black outline-none placeholder:text-black/35"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-black/70">
+                  Email address
+                </label>
+                <div className="flex items-center rounded-2xl border border-black/10 bg-white px-4 py-3 transition focus-within:border-black">
+                  <Mail className="mr-3 h-5 w-5 text-black/35" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    disabled={isLoading}
+                    required
+                    className="w-full bg-transparent text-[15px] text-black outline-none placeholder:text-black/35"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-black/70">
+                  Password
+                </label>
+                <div className="flex items-center rounded-2xl border border-black/10 bg-white px-4 py-3 transition focus-within:border-black">
+                  <Lock className="mr-3 h-5 w-5 text-black/35" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Create a password"
+                    disabled={isLoading}
+                    required
+                    className="w-full bg-transparent text-[15px] text-black outline-none placeholder:text-black/35"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="ml-3 text-black/40 transition hover:text-black"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-black/70">
+                  Confirm password
+                </label>
+                <div className="flex items-center rounded-2xl border border-black/10 bg-white px-4 py-3 transition focus-within:border-black">
+                  <Lock className="mr-3 h-5 w-5 text-black/35" />
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm your password"
+                    disabled={isLoading}
+                    required
+                    className="w-full bg-transparent text-[15px] text-black outline-none placeholder:text-black/35"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="ml-3 text-black/40 transition hover:text-black"
+                  >
+                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-black/70">
+                  Role
+                </label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                  className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-[15px] text-black outline-none"
+                >
+                  <option value="USER">User</option>
+                  <option value="ADMIN">Admin</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
                 disabled={isLoading}
+                className="w-full rounded-2xl bg-black px-4 py-3.5 text-sm font-medium text-white transition hover:bg-black/90 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <option value="USER">User</option>
-                <option value="ADMIN">Admin</option>
-              </select>
-            </div>
-          </div>
+                {isLoading ? 'Creating account...' : 'Create account'}
+              </button>
+            </form>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? 'Creating account...' : 'Sign up'}
-            </button>
+            <p className="mt-8 text-center text-sm text-black/55">
+              Already have an account?{' '}
+              <button
+                onClick={() => navigate('/login')}
+                className="font-medium text-black underline underline-offset-4"
+              >
+                Sign in
+              </button>
+            </p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
