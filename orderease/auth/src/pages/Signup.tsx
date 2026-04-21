@@ -1,13 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
-import { signupUser, clearError, clearSuccess } from 'host/authSlice';
+import { clearError, clearSuccess } from 'host/authSlice';
 import { useAppDispatch, useAppSelector } from 'host/hooks';
 
 const Signup: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { isLoading, error, success } = useAppSelector((state: any) => state.auth);
+
+  // Local signup function since host doesn't export it
+  const signupUser = async (userData: { name: string; email: string; password: string; role: string }) => {
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        dispatch(clearError());
+        return;
+      }
+
+      // Store token in localStorage
+      if (data.data.accessToken) {
+        localStorage.setItem('token', data.data.accessToken);
+      }
+
+      dispatch(clearSuccess());
+      navigate('/login');
+    } catch (error) {
+      console.error('Signup error:', error);
+    }
+  };
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
