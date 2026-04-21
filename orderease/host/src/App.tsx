@@ -9,6 +9,7 @@ import AuthWatcher from './components/AuthWatcher';
 
 const RemoteLogin = React.lazy(() => import('auth/Login'));
 const RemoteSignup = React.lazy(() => import('auth/Signup'));
+const RemoteProductPage = React.lazy(() => import('products/ProductPage'));
 
 function App() {
   return (
@@ -33,6 +34,16 @@ function App() {
             <ErrorBoundary>
               <Suspense fallback={<div className="flex justify-center items-center h-screen text-gray-600">Loading Signup...</div>}>
                 <RemoteSignup />
+              </Suspense>
+            </ErrorBoundary>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <ErrorBoundary>
+              <Suspense fallback={<div className="flex justify-center items-center h-screen text-gray-600">Loading Products...</div>}>
+                <RemoteProductPage />
               </Suspense>
             </ErrorBoundary>
           }

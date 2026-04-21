@@ -13,6 +13,7 @@ module.exports = {
           filename: 'remoteEntry.js',
           remotes: {
             auth: "auth@http://localhost:3002/remoteEntry.js",
+            products: "products@http://localhost:3003/remoteEntry.js",
           },
           exposes: {
             "./authSlice": "./src/redux/authSlice",
