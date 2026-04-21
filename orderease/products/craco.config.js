@@ -32,11 +32,11 @@ module.exports = {
           shared: {
             react: {
               singleton: true,
-              requiredVersion: false,
+              requiredVersion: "^18.2.0",
             },
             'react-dom': {
               singleton: true,
-              requiredVersion: false,
+              requiredVersion: "^18.2.0",
             },
             'react-router-dom': {
               singleton: true,

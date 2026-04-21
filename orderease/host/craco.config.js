@@ -21,8 +21,8 @@ module.exports = {
             "./store": "./src/redux/store",
           },
           shared: {
-            react: { singleton: true, requiredVersion: false },
-            "react-dom": { singleton: true, requiredVersion: false },
+            react: { singleton: true, requiredVersion: "^18.2.0" },
+            "react-dom": { singleton: true, requiredVersion: "^18.2.0" },
             "react-router-dom": { singleton: true, requiredVersion: false },
             "react-redux": { singleton: true, requiredVersion: false },
             "@reduxjs/toolkit": { singleton: true, requiredVersion: false },

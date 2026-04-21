@@ -24,6 +24,7 @@ const Dashboard: React.FC = () => {
       title: 'Products',
       description: 'Browse product activity and updates.',
       icon: Box,
+      onClick: () => navigate('/products'),
     },
     {
       title: 'Settings',
@@ -62,7 +63,8 @@ const Dashboard: React.FC = () => {
             return (
               <div
                 key={card.title}
-                className="group rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)]"
+                className={`group rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,0.08)] ${card.onClick ? 'cursor-pointer' : ''}`}
+                onClick={card.onClick}
               >
                 <div className="flex items-start justify-between">
                   <div className="rounded-2xl border border-black/10 bg-black p-3 text-white">
@@ -74,7 +76,13 @@ const Dashboard: React.FC = () => {
                 <h3 className="mt-6 text-xl font-semibold text-black">{card.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-black/55">{card.description}</p>
 
-                <button className="mt-6 text-sm font-medium text-black underline underline-offset-4">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    card.onClick?.();
+                  }}
+                  className="mt-6 text-sm font-medium text-black underline underline-offset-4"
+                >
                   Open
                 </button>
               </div>
