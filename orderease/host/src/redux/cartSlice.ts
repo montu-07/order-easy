@@ -39,7 +39,7 @@ export const getCart = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/order`, {
+      const response = await fetch(`${API_BASE_URL}/cart`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export const removeFromCart = createAsyncThunk(
   async (cartItemId: string | number, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/order/${cartItemId}`, {
+      const response = await fetch(`${API_BASE_URL}/cart/${cartItemId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export const updateQuantity = createAsyncThunk(
   async ({ cartItemId, quantity }: { cartItemId: string | number; quantity: number }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/order/${cartItemId}`, {
+      const response = await fetch(`${API_BASE_URL}/cart/${cartItemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export const clearCart = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/cart/clear`, {
+      const response = await fetch(`${API_BASE_URL}/cart`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

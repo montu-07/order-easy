@@ -1,4 +1,5 @@
 declare module "host/cartSlice" {
+  export const getCart: () => any;
   export const addToCart: (item: any) => any;
   export const removeFromCart: (id: any) => any;
   export const updateQuantity: (id: any, quantity: number) => any;

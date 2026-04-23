@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CartList from '../components/CartList';
-import { cartApi } from '../services/cartApi';
 import { useAppDispatch, useAppSelector } from 'host/hooks';
-import { clearCart } from 'host/cartSlice';
+import { clearCart, getCart } from 'host/cartSlice';
+
+interface CartState {
+  items: any[];
+  isLoading: boolean;
+  error: string | null;
+  total: number;
+}
 
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { items, isLoading, error, total } = useAppSelector((state: any) => state.cart);
+  const { items, isLoading, error, total }: CartState = useAppSelector((state: any) => state.cart);
   const [localLoading, setLocalLoading] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -21,37 +27,32 @@ const CartPage: React.FC = () => {
       return;
     }
 
-    const loadCart = async () => {
-      try {
-        setLocalLoading(true);
-        setLocalError(null);
-        await cartApi.getCart();
-        // The cart items will be automatically loaded via Redux
-      } catch (error) {
-        setLocalError(error instanceof Error ? error.message : 'Failed to load cart');
-      } finally {
-        setLocalLoading(false);
-      }
-    };
-
+    // Always load cart on mount
     loadCart();
-  }, []);
+  }, [navigate, dispatch]);
 
-  const handleClearCart = async () => {
+  const loadCart = async () => {
     try {
       setLocalLoading(true);
-      await cartApi.clearCart();
-      dispatch(clearCart());
+      setLocalError(null);
+      await dispatch(getCart());
+      // The cart items will be automatically loaded via Redux
     } catch (error) {
-      setLocalError(error instanceof Error ? error.message : 'Failed to clear cart');
+      setLocalError(error instanceof Error ? error.message : 'Failed to load cart');
     } finally {
       setLocalLoading(false);
     }
   };
 
-  const handleCheckout = () => {
-    // Navigate to checkout page (to be implemented)
-    alert('Checkout functionality coming soon!');
+  const handleClearCart = async () => {
+    try {
+      setLocalLoading(true);
+      await dispatch(clearCart()).unwrap();
+    } catch (error) {
+      setLocalError(error instanceof Error ? error.message : 'Failed to clear cart');
+    } finally {
+      setLocalLoading(false);
+    }
   };
 
   const isLoadingState = isLoading || localLoading;
@@ -115,14 +116,6 @@ const CartPage: React.FC = () => {
 
               <div className="space-y-3">
                 <button
-                  onClick={handleCheckout}
-                  disabled={items.length === 0 || isLoadingState}
-                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                >
-                  {isLoadingState ? 'Processing...' : 'Proceed to Checkout'}
-                </button>
-                
-                <button
                   onClick={handleClearCart}
                   disabled={items.length === 0 || isLoadingState}
                   className="w-full bg-red-50 text-red-600 py-3 px-4 rounded-lg font-medium hover:bg-red-100 transition-colors disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
@@ -135,7 +128,7 @@ const CartPage: React.FC = () => {
               <div className="mt-6 pt-6 border-t">
                 <div className="flex items-center justify-center text-sm text-gray-500">
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   Secure Checkout
                 </div>

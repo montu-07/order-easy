@@ -2,7 +2,6 @@ import React from 'react';
 import { Product } from '../services/productApi';
 import { useAppDispatch } from 'host/hooks';
 import { addToCart } from 'host/cartSlice';
-import { cartApi } from '../services/cartApi';
 
 interface ProductCardProps {
   product: Product;
@@ -23,17 +22,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
       loadingMessage.textContent = 'Adding to cart...';
       document.body.appendChild(loadingMessage);
 
-      // Call backend API
-      await cartApi.addToCart({
-        foodId: product.id,
-        name: displayName,
-        price: product.price,
-        quantity: 1,
-        image: product.image,
-        description: product.description,
-      });
-
-      // Update Redux store only after successful API call
+      // Use Redux dispatch for single source of truth
       const cartItem = {
         productId: product.id,
         name: displayName,
@@ -42,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         description: product.description,
       };
       
-      dispatch(addToCart(cartItem));
+      await dispatch(addToCart(cartItem)).unwrap();
 
       // Show success feedback only after API success
       if (document.body.contains(loadingMessage)) {
