@@ -57,12 +57,12 @@ export const productApi = {
   // Add to cart
   addToCart: async (productId: string | number): Promise<any> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/cart/add`, {
+      const response = await fetch(`${API_BASE_URL}/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify({ foodId: productId }),
       });
       
       if (!response.ok) {

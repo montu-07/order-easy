@@ -10,6 +10,7 @@ import AuthWatcher from './components/AuthWatcher';
 const RemoteLogin = React.lazy(() => import('auth/Login'));
 const RemoteSignup = React.lazy(() => import('auth/Signup'));
 const RemoteProductPage = React.lazy(() => import('products/ProductPage'));
+const RemoteCartPage = React.lazy(() => import('cart/CartPage'));
 
 const ProductPageWithCSS: React.FC = () => {
   const [cssLoaded, setCssLoaded] = React.useState(false);
@@ -130,6 +131,16 @@ function App() {
             <ErrorBoundary>
               <Suspense fallback={<div className="flex justify-center items-center h-screen text-gray-600">Loading Products...</div>}>
                 <ProductPageWithCSS />
+              </Suspense>
+            </ErrorBoundary>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ErrorBoundary>
+              <Suspense fallback={<div className="flex justify-center items-center h-screen text-gray-600">Loading Cart...</div>}>
+                <RemoteCartPage />
               </Suspense>
             </ErrorBoundary>
           }

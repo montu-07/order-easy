@@ -14,9 +14,11 @@ module.exports = {
           remotes: {
             auth: "auth@http://localhost:3002/remoteEntry.js",
             products: "products@http://localhost:3003/remoteEntry.js",
+            cart: "cart@http://localhost:3004/remoteEntry.js",
           },
           exposes: {
             "./authSlice": "./src/redux/authSlice",
+            "./cartSlice": "./src/redux/cartSlice",
             "./hooks": "./src/redux/hooks",
             "./store": "./src/redux/store",
           },

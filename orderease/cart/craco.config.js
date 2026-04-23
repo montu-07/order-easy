@@ -19,12 +19,12 @@ module.exports = {
 
       webpackConfig.plugins.push(
         new ModuleFederationPlugin({
-          name: 'products',
+          name: 'cart',
           filename: 'remoteEntry.js',
           exposes: {
-            './ProductPage': './src/pages/ProductPage',
-            './ProductList': './src/components/ProductList',
-            './ProductCard': './src/components/ProductCard',
+            './CartPage': './src/pages/CartPage',
+            './CartList': './src/components/CartList',
+            './CartItem': './src/components/CartItem',
           },
           remotes: {
             host: 'host@http://localhost:3000/remoteEntry.js',
@@ -39,10 +39,6 @@ module.exports = {
               requiredVersion: "^18.2.0",
             },
             'react-router-dom': {
-              singleton: true,
-              requiredVersion: false,
-            },
-            'react-redux': {
               singleton: true,
               requiredVersion: false,
             },

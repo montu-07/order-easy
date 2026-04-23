@@ -1,15 +1,83 @@
 import React from 'react';
 import { Product } from '../services/productApi';
+import { useAppDispatch } from 'host/hooks';
+import { addToCart } from 'host/cartSlice';
+import { cartApi } from '../services/cartApi';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: (productId: string | number) => void;
+  onAddToCart?: (productId: string | number) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+  const dispatch = useAppDispatch();
   const displayName = product.title || product.name || 'Unknown Product';
   const rating = 4.2; // Default rating - can be updated from API
   const category = 'Electronics'; // Default category - can be updated from API
+
+  const handleAddToCart = async () => {
+    try {
+      // Show loading state
+      const loadingMessage = document.createElement('div');
+      loadingMessage.className = 'fixed top-4 right-4 bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      loadingMessage.textContent = 'Adding to cart...';
+      document.body.appendChild(loadingMessage);
+
+      // Call backend API
+      await cartApi.addToCart({
+        foodId: product.id,
+        name: displayName,
+        price: product.price,
+        quantity: 1,
+        image: product.image,
+        description: product.description,
+      });
+
+      // Update Redux store only after successful API call
+      const cartItem = {
+        productId: product.id,
+        name: displayName,
+        price: product.price,
+        image: product.image,
+        description: product.description,
+      };
+      
+      dispatch(addToCart(cartItem));
+
+      // Show success feedback only after API success
+      if (document.body.contains(loadingMessage)) {
+        document.body.removeChild(loadingMessage);
+      }
+      
+      const successMessage = document.createElement('div');
+      successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse';
+      successMessage.textContent = 'Added to cart!';
+      document.body.appendChild(successMessage);
+      setTimeout(() => {
+        if (document.body.contains(successMessage)) {
+          document.body.removeChild(successMessage);
+        }
+      }, 3000);
+
+    } catch (error) {
+      // Remove loading message
+      const loadingMessage = document.querySelector('.fixed.top-4.right-4');
+      if (loadingMessage && document.body.contains(loadingMessage)) {
+        document.body.removeChild(loadingMessage);
+      }
+
+      // Show error message
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+      errorMessage.textContent = error instanceof Error ? error.message : 'Failed to add to cart';
+      document.body.appendChild(errorMessage);
+      setTimeout(() => {
+        if (document.body.contains(errorMessage)) {
+          document.body.removeChild(errorMessage);
+        }
+      }, 3000);
+    }
+  };
   
   // Generate star rating display
   const renderStars = (rating: number) => {
@@ -103,7 +171,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
           </div>
           
           <button 
-            onClick={() => onAddToCart(product.id)}
+            onClick={handleAddToCart}
             className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

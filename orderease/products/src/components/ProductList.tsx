@@ -58,21 +58,6 @@ const ProductList = () => {
     setFilteredProducts(filtered);
   }, [products, searchQuery, sortBy]);
 
-  const handleAddToCart = async (productId: string | number) => {
-    try {
-      await productApi.addToCart(productId);
-      // Show success toast instead of alert
-      const successMessage = document.createElement('div');
-      successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse';
-      successMessage.textContent = '✓ Product added to cart!';
-      document.body.appendChild(successMessage);
-      setTimeout(() => document.body.removeChild(successMessage), 3000);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to add to cart';
-      alert(errorMessage);
-    }
-  };
-
   // Enhanced skeleton loader component
   const SkeletonLoader = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -200,7 +185,6 @@ const ProductList = () => {
               <ProductCard 
                 key={product.id} 
                 product={product} 
-                onAddToCart={handleAddToCart}
               />
             ))}
           </div>
